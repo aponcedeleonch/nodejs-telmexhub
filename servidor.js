@@ -2,6 +2,10 @@
 var express = require("express");
 var nunjucks = require("nunjucks");
 
+//Requerimos nuestros modulos, en principal.js
+var modelos = require("./modelos/principal.js");
+console.log("Prueba: " + modelos.PRUEBA);
+
 //Invocamos la funcion express para crear un servidor web
 var app = express();
 
@@ -27,3 +31,28 @@ app.get("/", function(req, res){
 app.get("/informes", function(req, res){
 	res.send("Aqui hay informes");
 });
+
+app.get("/articulo", function(req, res){
+	res.render("articulo.html");
+});
+
+app.get("/blog", function(req, res){
+	res.render("blog.html");
+});
+
+app.get("/usuario", function(req, res){
+	res.render("usuario.html");
+});
+
+/*
+ * Para no tener que parar e iniciar el servidor ante todos los cambios, hay que instalar supervisor
+ * $ npm install supervisor -g
+ * Y despues correr el servidor con el supervisor
+ * $ supervisor servidor.js
+ * 
+ * Podemos instalar sequelize, que nos permite soportar varios manejadores al mismo tiemoo
+ * $ npm install sequelize --save
+ * Instalando sus dependencias
+ * $ npm install sqlite3 --save
+ * $ npm install pg --save (se necesita python)
+ */
