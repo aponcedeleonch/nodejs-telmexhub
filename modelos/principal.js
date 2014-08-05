@@ -16,8 +16,12 @@ var sequelize = new Sequelize("NOMBRE_BASE", "USUARIO DE BD", "CONTRA", {
 	}
 });
 
+//Sincronia
+	//Se lee todo de disco duro
+	//Se ejecuta la siguiente liena
 //Las operaciones en disco duro en node, se hacen de manera asincrono
 sequelize.authenticate().success(function (){
+	//Se ejecuta en callback esta funcion
 	console.log("Base lista");
 });
 //Al hacerse de manera asincrona las operaciones en node.js es mucho mas poderoso y rapido
@@ -27,3 +31,22 @@ sequelize.authenticate().success(function (){
 //module.exports es un objeto que nos permite hacer visibles datos de este archivo
 
 module.exports.PRUEBA = "hola";
+
+
+//Mapeos a la tabla con sequelize
+
+var Articulo = sequelize.define("Articulo", {
+	id:{
+		//Indicamos que es una columna con llave primaria
+		primaryKey: true,
+		type: Sequelize.Integer
+	},
+	//Columa titulo de texto
+	titulo: Sequelize.TEXT,
+	contenido: Sequelize.TEXT
+}, {
+	//tableName indica cual es el nombre de la tabla que se quiere consultar
+	tableName: "articulos"
+});
+
+module.exports.Articulo = Articulo;

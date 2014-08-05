@@ -33,7 +33,14 @@ app.get("/informes", function(req, res){
 });
 
 app.get("/articulo", function(req, res){
-	res.render("articulo.html");
+	//Hacemos la consulta para buscar el primer renglon
+	modelos.Articulo.find(1).success(function(articulo){
+		//Este metodo se ejecuta cuando encuentra algo
+		console.log("Articulo: " + articulo.titulo);
+		res.render("articulo.html", {
+			articuloPrincipal: articulo
+		});
+	});
 });
 
 app.get("/blog", function(req, res){
