@@ -39,7 +39,7 @@ var Articulo = sequelize.define("Articulo", {
 	id:{
 		//Indicamos que es una columna con llave primaria
 		primaryKey: true,
-		type: Sequelize.Integer
+		type: Sequelize.INTEGER
 	},
 	//Columa titulo de texto
 	titulo: Sequelize.TEXT,
