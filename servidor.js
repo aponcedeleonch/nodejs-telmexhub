@@ -167,6 +167,17 @@ app.get("/articulo/crear", function(req, res){
 	res.render("articulo_editar.html");
 });
 
+app.get("/articulo/:articuloId([0-9]+)/destruir", function(req, res){
+	var articuloId = req.params.articuloId;
+	
+	modelos.Articulo.find(articuloId).success(function(articulo){
+		articulo.destroy().success(function(){
+			//Una vez que se ha destruido el renglon
+			res.send("El articulo " + articuloId + " fue destruido");
+		});
+	});
+});
+
 /*
  * Para no tener que parar e iniciar el servidor ante todos los cambios, hay que instalar supervisor
  * $ npm install supervisor -g

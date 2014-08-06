@@ -48,7 +48,15 @@ var Articulo = sequelize.define("Articulo", {
 	fecha_creacion: Sequelize.DATE
 }, {
 	//tableName indica cual es el nombre de la tabla que se quiere consultar
-	tableName: "articulos"
+	tableName: "articulos",
+	getterMethods:{
+		//getDataValue me permite acceder a las columnas de este modelo
+		fecha: function(){
+			var fecha = this.getDataValue("fecha_creacion");
+			var fechaFormato = fecha.getDate() + "-" + fecha.getMonth() + "-" + fecha.getFullYear();
+			return fechaFormato;
+		}
+	}
 });
 
 
