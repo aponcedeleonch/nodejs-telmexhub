@@ -32,6 +32,7 @@ app.get("/informes", function(req, res){
 	res.send("Aqui hay informes");
 });
 
+//Seleccionando un solo registro
 app.get("/articulo", function(req, res){
 	//Hacemos la consulta para buscar el primer renglon
 	modelos.Articulo.find(1).success(function(articulo){
@@ -43,12 +44,62 @@ app.get("/articulo", function(req, res){
 	});
 });
 
-app.get("/blog", function(req, res){
-	res.render("blog.html");
+//Con una expresion regular, indica que igual manejara las paginas con diagonal numerica
+app.get("/articulo/:articuloId([0-9]+)", function(req, res){
+	//Con req.params recupera el numero de la expresion regular y lo asigna a la variable
+	var articuloId = req.params.articuloId;
+	//Hacemos la consulta para buscar el articulo ingresado en la ruta
+	modelos.Articulo.find({
+		where:{id: articuloId},
+		include: [{
+			model: modelos.Comentario,
+			as: "comentarios"
+		}, {
+			model: modelos.Categoria,
+			as: "categorias"
+			}]
+	}).success(function(articulo){
+		//Este metodo se ejecuta cuando encuentra algo
+		//console.log("Articulo: " + articulo.titulo);
+		res.render("articulo.html", {
+			articuloPrincipal: articulo
+		});
+	});
 });
 
+//Seleccionando varios registros
 app.get("/usuario", function(req, res){
-	res.render("usuario.html");
+	modelos.Usuario.find({
+		where:{id: 2},
+		include: [{
+			model: modelos.Articulo,
+			//Este parametro debe ser igual al que se uso en la declaracion de la llave foranea
+			as:"articulos"
+		}]
+	}).success(function(usuario){
+		res.render("usuario.html", {
+			usuario: usuario
+		});
+	});
+});
+
+//Pasando varios argumentos a la vista
+//Ingresando un valor desde la URL de la forma ?offset=1
+app.get("/blog", function(req, res){
+	var offs = req.query.offset;
+	modelos.Articulo.findAll({
+		//Limitando la busqueda a 3 registros
+		limit:3,
+		//Dandole offset
+		offset: offs
+	}).success(function(articulos){
+		modelos.Categoria.findAll().success(function(categorias){
+			res.render("blog.html", {
+				articulos: articulos,
+				categorias: categorias
+			});
+		});	
+	});
 });
 
 /*

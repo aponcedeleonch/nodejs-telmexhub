@@ -6,7 +6,34 @@
 	</head>
 	<body>
 		<h1>Artículo</h1>
-		<!-- Las llaves son parte del sistema de templates, nunjucks -->
-		<h2>{{articuloPrincipal.titulo}}</h2>
+		{% if articuloPrincipal != null %}
+			<!-- Las llaves son parte del sistema de templates, nunjucks -->
+			<h2>{{articuloPrincipal.titulo}}</h2>
+			<p>{{articuloPrincipal.contenido}}</p>
+			<p>Fecha: {{articuloPrincipal.fecha_creacion}}</p>
+			
+			<h3>Comentarios</h3>
+			{% if articuloPrincipal.comentarios.length > 0 %}
+				{% for comentario in articuloPrincipal.comentarios %}
+					<p>{{comentario.comentario}}</p>
+				{% endfor %}
+			{% else %}
+				<p>El articulo no tiene comentarios</p>
+			{% endif %}
+			
+			<h3>Categorias</h3>
+			{% if articuloPrincipal.categorias.length > 0 %}
+				<ul>
+				{% for categoria in articuloPrincipal.categorias %}
+					<li>{{categoria.nombre}}</li>
+				{% endfor %}
+				</ul>
+			{% else %}
+				<p>El articulo no tiene categorias</p>
+			{% endif %}
+			
+		{% else %}
+			<p>No existe el articulo</p>
+		{% endif %}
 	</body>
 </html>

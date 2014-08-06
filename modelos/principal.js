@@ -43,10 +43,94 @@ var Articulo = sequelize.define("Articulo", {
 	},
 	//Columa titulo de texto
 	titulo: Sequelize.TEXT,
-	contenido: Sequelize.TEXT
+	contenido: Sequelize.TEXT,
+	fecha_creacion: Sequelize.DATE
 }, {
 	//tableName indica cual es el nombre de la tabla que se quiere consultar
 	tableName: "articulos"
 });
 
+
+//Tabla de usuarios
+
+var Usuario = sequelize.define("Usuario", {
+	id:{
+		//Indicamos que es una columna con llave primaria
+		primaryKey: true,
+		type: Sequelize.INTEGER
+	},
+	//Columa titulo de texto
+	nombre: Sequelize.TEXT,
+	email: Sequelize.TEXT,
+	password: Sequelize.TEXT
+}, {
+	//tableName indica cual es el nombre de la tabla que se quiere consultar
+	tableName: "usuarios"
+});
+
+//Tabla de categorias
+
+var Categoria = sequelize.define("Categoria", {
+	id:{
+		//Indicamos que es una columna con llave primaria
+		primaryKey: true,
+		type: Sequelize.INTEGER
+	},
+	//Columa titulo de texto
+	nombre: Sequelize.TEXT
+}, {
+	//tableName indica cual es el nombre de la tabla que se quiere consultar
+	tableName: "categorias"
+});
+
+//Tabla Comentarios
+
+var Comentario = sequelize.define("Comentario", {
+	id: {
+		primaryKey: true,
+		type: Sequelize.INTEGER
+	},
+	comentario: Sequelize.TEXT
+}, {
+	tableName: "comentarios"
+});
+
+//Mapeos de tabla a tabla
+
+//De 1 a N
+
+//1 usuario tiene muchos articulos
+Usuario.hasMany(Articulo, {
+	foreignKey: "usuario_id",
+	as: "articulos"
+});
+
+//1 articulo tiene muchos comentarios
+Articulo.hasMany(Comentario, {
+	foreignKey: "articulo_id",
+	as: "comentarios"
+});
+
+//De N a N
+
+//muchas categorias tienen muchos articulos
+
+Articulo.hasMany(Categoria, {
+	foreignKey: "articulo_id",
+	as: "categorias",
+	//Parametro solo para la relacion N-N
+	through: "categorias_articulos"
+});
+
+Categoria.hasMany(Articulo, {
+	foreignKey: "categoria_id",
+	as: "articulos",
+	//Parametro solo para la relacion N-N
+	through: "categorias_articulos"
+});
+
+//Exporta todas las tablas
+module.exports.Usuario = Usuario;
+module.exports.Categoria = Categoria;
 module.exports.Articulo = Articulo;
+module.exports.Comentario = Comentario;
