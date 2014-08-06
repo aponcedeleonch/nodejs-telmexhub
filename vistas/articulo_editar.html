@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8"/>
+		<title>Blog</title>
+	</head>
+	<body>
+		<h1>Editor de articulos</h1>
+		{% if actualizado == 1 %}
+			<p>Datos actualizados</p>
+		{% endif %}
+		<form method="post" action="/guardar-articulo">
+			<div>
+				<input name="usuario_id" type="hidden" value="{{articulo.usuario_id}}"/>
+			</div>
+			<div>
+				<input name="id" type="hidden" value="{{articulo.id}}"/>
+			</div>
+			<div>
+				Titulo: <input type="text" name="titulo" value="{{articulo.titulo}}"/>
+			</div>
+			<div>
+				Contenido: <textarea name="contenido">{{articulo.contenido}}</textarea>
+			</div>
+			<div>
+				<input type="submit" value="Enviar" />
+			</div>
+		</form>
+	</body>
+</html>

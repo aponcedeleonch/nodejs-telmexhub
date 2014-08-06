@@ -9,14 +9,26 @@
 		<p>Nombre: {{usuario.nombre}}</p>
 		<p>Correo: {{usuario.email}}</p>
 		
+		<h2>Datos del usuario</h2>
+		<p>Biografia: {{usuario.datosUsuario.biografia}}</p>
+		<p>Fecha de creacion: {{usuario.datosUsuario.fecha_registro}}</p>
+		
 		<h2>Articulos del usuario</h2>
 		{% for articulo in usuario.articulos %}
 			<p>{{articulo.titulo}}</p>
 		{% endfor %}
-		<!-- {% for usu in usuario %}
-			<p>Nombre: {{usu.nombre}}</p>
-			<p>Email: {{usu.email}}</p>
-			<p>Contrasenia: {{usu.password}}</p>
+		<!-- {% for usuario in usuario %}
+			<p>Nombre: {{usuario.nombre}}</p>
+			<p>Correo: {{usuario.email}}</p>
+			
+			<h2>Datos del usuario</h2>
+			<p>Biografia: {{usuario.datosUsuario.biografia}}</p>
+			<p>Fecha de creacion: {{usuario.datosUsuario.fecha_registro}}</p>
+			
+			<h2>Articulos del usuario</h2>
+			{% for articulo in usuario.articulos %}
+				<p>{{articulo.titulo}}</p>
+			{% endfor %}
 		{% endfor %} -->
 	</body>
 </html>

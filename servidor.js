@@ -1,6 +1,7 @@
 //Importamos la dependenca express. Utilizando NPM
 var express = require("express");
 var nunjucks = require("nunjucks");
+var bodyParser = require("body-parser");
 
 //Requerimos nuestros modulos, en principal.js
 var modelos = require("./modelos/principal.js");
@@ -8,6 +9,9 @@ console.log("Prueba: " + modelos.PRUEBA);
 
 //Invocamos la funcion express para crear un servidor web
 var app = express();
+
+//Habilitamos los parametros tipo post para express
+app.use(bodyParser());
 
 //Configuramos nunjucks. Sistema de templates
 //Variable dinamica, que genera node, con la ruta actual donde se encuentre el archivo
@@ -57,7 +61,10 @@ app.get("/articulo/:articuloId([0-9]+)", function(req, res){
 		}, {
 			model: modelos.Categoria,
 			as: "categorias"
-			}]
+		}, {
+			model: modelos.Usuario,
+			as: "usuario"	
+		}]
 	}).success(function(articulo){
 		//Este metodo se ejecuta cuando encuentra algo
 		//console.log("Articulo: " + articulo.titulo);
@@ -70,11 +77,16 @@ app.get("/articulo/:articuloId([0-9]+)", function(req, res){
 //Seleccionando varios registros
 app.get("/usuario", function(req, res){
 	modelos.Usuario.find({
+		//Hay comentarios en usuarios HTML para que funcione la consulta para varios usuarios
+		//Solo hay que comentar la linea del where y en vez de fin, que sea findAll
 		where:{id: 2},
 		include: [{
 			model: modelos.Articulo,
 			//Este parametro debe ser igual al que se uso en la declaracion de la llave foranea
 			as:"articulos"
+		},{
+			model: modelos.DatosUsuario,
+			as: "datosUsuario"
 		}]
 	}).success(function(usuario){
 		res.render("usuario.html", {
@@ -102,6 +114,59 @@ app.get("/blog", function(req, res){
 	});
 });
 
+app.get("/articulo/:articuloId([0-9]+)/editar", function(req, res){
+	//req.params = parametros en las rutas
+	//req.query parametros en forma de query string
+	
+	var articuloId = req.params.articuloId;
+	var actualizado = req.query.actualizado;
+	
+	modelos.Articulo.find(articuloId).success(function(articulo){
+		res.render("articulo_editar.html", {
+			articulo: articulo,
+			actualizado: actualizado
+		});
+	});
+});
+
+//Enviamos el formulario hecho en articulo/1/editar con una peticion http-post
+app.post("/guardar-articulo", function(req, res){
+	var id = req.body.id;
+	var titulo = req.body.titulo;
+	var contenido = req.body.contenido;
+	var usuario_id = req.body.usuario_id;
+	
+	if(id == ""){
+		//Para crear un nuevo renglon
+		modelos.Articulo.create({
+			titulo: titulo,
+			contenido: contenido,
+			fecha_creacion: new Date(),
+			usuario_id: 1
+		}).success(function (articuloNuevo){
+			var url="/articulo/"+articuloNuevo.id+"/editar?actualizado=1";
+			res.redirect(url);
+		});
+	} else {
+		modelos.Articulo.find(id).success(function(articulo){
+			articulo.titulo = titulo;
+			articulo.contenido = contenido;
+			
+			//save actualiza los tablas para este renglon
+			articulo.save().success(function(){
+				
+				var url = "/articulo/"+articulo.id+"/editar?actualizado=1";
+				res.redirect(url);
+			});
+		});
+	}
+});
+
+//Esta ruta es para crear nuevos articulos
+app.get("/articulo/crear", function(req, res){
+	res.render("articulo_editar.html");
+});
+
 /*
  * Para no tener que parar e iniciar el servidor ante todos los cambios, hay que instalar supervisor
  * $ npm install supervisor -g
@@ -113,4 +178,7 @@ app.get("/blog", function(req, res){
  * Instalando sus dependencias
  * $ npm install sqlite3 --save
  * $ npm install pg --save (se necesita python)
+ * 
+ * Para poder hacer peticiones post (creo)
+ * $ npm install body-parser --save
  */

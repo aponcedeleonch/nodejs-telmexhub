@@ -12,14 +12,8 @@
 			<p>{{articuloPrincipal.contenido}}</p>
 			<p>Fecha: {{articuloPrincipal.fecha_creacion}}</p>
 			
-			<h3>Comentarios</h3>
-			{% if articuloPrincipal.comentarios.length > 0 %}
-				{% for comentario in articuloPrincipal.comentarios %}
-					<p>{{comentario.comentario}}</p>
-				{% endfor %}
-			{% else %}
-				<p>El articulo no tiene comentarios</p>
-			{% endif %}
+			<p>Autor del articulo: {{articuloPrincipal.usuario.nombre}}</p>
+			<p>Email del autor: {{articuloPrincipal.usuario.email}}</p>
 			
 			<h3>Categorias</h3>
 			{% if articuloPrincipal.categorias.length > 0 %}
@@ -30,6 +24,15 @@
 				</ul>
 			{% else %}
 				<p>El articulo no tiene categorias</p>
+			{% endif %}
+			
+			<h3>Comentarios</h3>
+			{% if articuloPrincipal.comentarios.length > 0 %}
+				{% for comentario in articuloPrincipal.comentarios %}
+					<p>{{comentario.comentario}}</p>
+				{% endfor %}
+			{% else %}
+				<p>El articulo no tiene comentarios</p>
 			{% endif %}
 			
 		{% else %}

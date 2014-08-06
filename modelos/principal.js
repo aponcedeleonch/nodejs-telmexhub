@@ -39,7 +39,8 @@ var Articulo = sequelize.define("Articulo", {
 	id:{
 		//Indicamos que es una columna con llave primaria
 		primaryKey: true,
-		type: Sequelize.INTEGER
+		type: Sequelize.INTEGER,
+		autoIncrement: true
 	},
 	//Columa titulo de texto
 	titulo: Sequelize.TEXT,
@@ -95,6 +96,19 @@ var Comentario = sequelize.define("Comentario", {
 	tableName: "comentarios"
 });
 
+//Tabla DatosUsuario
+
+var DatosUsuario = sequelize.define("DatosUsuario", {
+	id:{
+		primaryKey: true,
+		type: Sequelize.INTEGER
+	},
+	biografia: Sequelize.TEXT,
+	fecha_registro: Sequelize.DATE
+},{
+	tableName: "datos_usuarios"
+});
+
 //Mapeos de tabla a tabla
 
 //De 1 a N
@@ -103,6 +117,13 @@ var Comentario = sequelize.define("Comentario", {
 Usuario.hasMany(Articulo, {
 	foreignKey: "usuario_id",
 	as: "articulos"
+});
+
+//1 articulo pertenece a un usuario
+//Es el sentido inverso de la relacion N-1
+Articulo.belongsTo(Usuario, {
+	foreignKey: "usuario_id",
+	as: "usuario"
 });
 
 //1 articulo tiene muchos comentarios
@@ -129,8 +150,18 @@ Categoria.hasMany(Articulo, {
 	through: "categorias_articulos"
 });
 
+
+//De 1 a 1
+
+//un usuario tiene datos
+Usuario.hasOne(DatosUsuario, {
+	foreignKey: "usuario_id",
+	as: "datosUsuario"
+});
+
 //Exporta todas las tablas
 module.exports.Usuario = Usuario;
 module.exports.Categoria = Categoria;
 module.exports.Articulo = Articulo;
 module.exports.Comentario = Comentario;
+module.exports.DatosUsuario = DatosUsuario;
